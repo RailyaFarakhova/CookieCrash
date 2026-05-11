@@ -1,19 +1,14 @@
 public class Cookies {
     public static int count = 0;
 
-    public Cookies(){
-
-    }
-
+    // Increases the count by the multiplier.
     public static void add(int multiplier){
-        if(multiplier == 0){
-            count++;
-        }else {
-            count+=multiplier;
-        }
+        count+=multiplier;
     }
 
+    // Decreases the count by the amount.
     public static void sell(int amount){
         count-=amount;
+        if(count<0) count=0;
     }
 }

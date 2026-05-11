@@ -16,16 +16,19 @@ public class GUI {
 
         button = new JButton("Add cookies!");
         button.setIcon(new ImageIcon("Cookie.png"));
+        // Causes the cookie amount to increase by the multiplier and changes display.
         button.addActionListener(e -> {
             Cookies.add(multiplier);
             label.setText("Cookies: " + Cookies.count);
             panel.updateUI();
         });
 
+        // TODO: Figure out how to display value of price variable in the button.
         upgradeButton = new JButton(
                 "<html><center>Upgrade<br>Cookies needed: 5</span></center></html>"
         );
         upgradeButton.setIcon(new ImageIcon("LotsOfCookies.png"));
+        // Subtracts from cookie amount by the price and increases the multiplier.
         upgradeButton.addActionListener(e -> {
             if (Cookies.count < price) return;
             multiplier++;
@@ -49,7 +52,7 @@ public class GUI {
 
         frame.setSize(700, 250);
         frame.add(panel);
-        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
 }
