@@ -1,14 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GUI {
-    int multiplier = 1;
-    int price = 5;
 
     JFrame frame; // a window
     JPanel panel; // go inside windows
-    JButton button, upgradeButton;
-    JLabel label;
+    JButton button, upgradeButton, autoButton;
+    JLabel currentCookies, cookiePrice, autoPrice, cookieRate;
+
+    Timer timer;
+    ActionListener guiUpdate;
 
     public GUI(){
         frame = new JFrame("Cookie Crash");
@@ -18,41 +21,60 @@ public class GUI {
         button.setIcon(new ImageIcon("Cookie.png"));
         // Causes the cookie amount to increase by the multiplier and changes display.
         button.addActionListener(e -> {
-            Cookies.add(multiplier);
-            label.setText("Cookies: " + Cookies.count);
+            Cookies.add();
+            currentCookies.setText(Cookies.display());
             panel.updateUI();
         });
 
-        // TODO: Figure out how to display value of price variable in the button.
         upgradeButton = new JButton(
-                "<html><center>Upgrade<br>Cookies needed: 5</span></center></html>"
+               "<html><center>Upgrade<br>Cookies</center></html>"
         );
         upgradeButton.setIcon(new ImageIcon("LotsOfCookies.png"));
         // Subtracts from cookie amount by the price and increases the multiplier.
         upgradeButton.addActionListener(e -> {
-            if (Cookies.count < price) return;
-            multiplier++;
-            Cookies.sell(price);
-            price *= 2;
-
-            label.setText("Cookies: " + Cookies.count);
-            upgradeButton.setText(
-                    "<html><center>Upgrade<br>Cookies needed: 5++</center></html>"
-            );
+            Cookies.upgradeClick();
+            currentCookies.setText(Cookies.display());
+            cookiePrice.setText(Cookies.getUpgradePrice());
             panel.updateUI();
         });
 
-        label = new JLabel("Cookies: " + Cookies.count );
+        autoButton = new JButton("Auto Click");
+        autoButton.addActionListener(e -> {
+            Cookies.upgradeAuto();
+            currentCookies.setText(Cookies.display());
+            autoPrice.setText(Cookies.getAutoPrice());
+            cookieRate.setText(Cookies.getAutoRate());
+            panel.updateUI();
+        });
+
+        currentCookies = new JLabel(Cookies.display());
+        cookiePrice = new JLabel(Cookies.getUpgradePrice());
+        autoPrice = new JLabel(Cookies.getAutoPrice());
+        cookieRate = new JLabel(Cookies.getAutoRate());
 
         panel.setBackground(Color.LIGHT_GRAY);
 
-        panel.add(label);
+        panel.add(currentCookies);
+        panel.add(cookiePrice);
+        panel.add(autoPrice);
+        panel.add(cookieRate);
         panel.add(button);
         panel.add(upgradeButton);
+        panel.add(autoButton);
 
-        frame.setSize(700, 250);
+        frame.setSize(1300, 400);
         frame.add(panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+        guiUpdate = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                currentCookies.setText(Cookies.display());
+            }
+        };
+
+        timer = new Timer(500, guiUpdate);
+        timer.start();
+        Cookies.timer.start();
     }
 }
